@@ -31,7 +31,7 @@ namespace GenericRepo
 
             services.AddControllers();
             services.AddDbContext<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("Default")));
-            services.AddTransient(typeof(IDataRepository<>),typeof(CustomerRepo<>));
+            services.AddScoped(typeof(IDataRepository<>),typeof(CustomerRepo<>));
 
             services.AddSwaggerGen(c =>
             {

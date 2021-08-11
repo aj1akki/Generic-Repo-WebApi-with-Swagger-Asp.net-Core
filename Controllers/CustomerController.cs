@@ -49,24 +49,15 @@ namespace GenericRepo.Controllers
             {
                 return BadRequest("Customer is Null");
             }
-            _repository.Add(customer);
+            _repository.Insert(customer);
             return Ok(customer);
         }
 
         // PUT api/<controller>/5  
-        [HttpPut("{id}")]
+        [HttpPut()]
         public IActionResult Put(int id, [FromBody] Customer customer)
         {
-            if (customer == null)
-            {
-                return BadRequest("Customer is null");
-            }
-            Customer customerToUpdate = _repository.Get(id);
-            if (customerToUpdate == null)
-            {
-                return NotFound("Customer could not be found");
-            }
-            _repository.Change(customerToUpdate, customer);
+            _repository.Change(customer);
             return Ok();
         }
 

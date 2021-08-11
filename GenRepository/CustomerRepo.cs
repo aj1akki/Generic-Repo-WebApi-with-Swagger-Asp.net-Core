@@ -1,5 +1,7 @@
-﻿using GenericRepo.Context;
+﻿
+using GenericRepo.Context;
 using GenericRepo.Models;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,44 +9,49 @@ using System.Threading.Tasks;
 
 namespace GenericRepo.GenRepository
 {
-    public class CustomerRepo<TEntity> : IDataRepository<Customer> where TEntity:class
+    public class CustomerRepo<T> : IDataRepository<T> where T : class
     {
-        readonly AppDbContext _context;
+        private readonly AppDbContext _context;
+        private DbSet<T> entities;
         public CustomerRepo(AppDbContext context)
         {
             _context = context;
+            entities = context.Set<T>();
         }
 
-        public void Add(Customer customer)
+        public void Insert(T entity)
         {
-            _context.Customers.Add(customer);
+            entities.Add(entity);
             _context.SaveChanges();
         }
 
-        public void Change(Customer customer, Customer entity)
+        public void Change(T entity)
         {
-            customer.Name = entity.Name;
-            customer.Email = entity.Email;
-            customer.Mobile = entity.Mobile;
-
+            _context.Update(entity);
+            _context.Set<T>().Attach(entity);
+            _context.Entry(entity).State = EntityState.Modified;
             _context.SaveChanges();
+           
         }
 
-        public void Delete(Customer customer)
+        public void Delete(T entity)
         {
-            _context.Customers.Remove(customer);
-            _context.SaveChanges(); ;
+            if (entity != null)
+            {
+                entities.Remove(entity);
+                _context.SaveChanges();
+            }
+
         }
 
-        public Customer Get(int id)
+        public T Get(int id)
         {
-            return _context.Customers
-              .FirstOrDefault(e => e.ID == id);
+            return entities.Find(id);
         }
 
-        public IEnumerable<Customer> GetAll()
+        public IEnumerable<T> GetAll()
         {
-            return _context.Customers.ToList();
+            return entities.AsEnumerable();
         }
     }
 }

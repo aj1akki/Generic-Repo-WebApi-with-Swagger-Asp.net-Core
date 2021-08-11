@@ -5,12 +5,12 @@ using System.Threading.Tasks;
 
 namespace GenericRepo.GenRepository
 {
-    public interface IDataRepository<TEntity> where TEntity:class
+    public interface IDataRepository<T> where T:class
     {
-        IEnumerable<TEntity> GetAll();
-        TEntity Get(int id);
-        void Add(TEntity entity);
-        void Change(TEntity dbEntity, TEntity entity);
-        void Delete(TEntity entity);
+        IEnumerable<T> GetAll();
+        T Get(int id);
+        void Insert(T entity);
+        void Change(T entity);
+        void Delete(T entity);
     }
 }
